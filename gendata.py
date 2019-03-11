@@ -10,6 +10,7 @@ from nltk.util import ngrams
 
 
 def preprocessing(inputfile):
+    """Create a vocabulary and map every word to an index"""
     vocabulary = []
     with open(inputfile, "r", encoding="utf8") as f:
         file = f.read()
@@ -26,6 +27,8 @@ def preprocessing(inputfile):
 
 
 def create_vectors(inputfile):
+    """Take the indexes from the vocabulary dictionary and create one hot
+    vectors representing each word in the vocabulary"""
     vocabulary_dict = preprocessing(inputfile)
     one_hot = {}
     for word, number in vocabulary_dict.items():
@@ -36,6 +39,7 @@ def create_vectors(inputfile):
 
 
 def split_data(inputfile):
+    """Split the data into test data and train data"""
     with open(inputfile, "r", encoding="utf8") as f:
         file = f.read()
         text = re.sub(r'/[^\s]+','',file)
@@ -49,6 +53,7 @@ def split_data(inputfile):
 
 
 def create_ngrams(inputfile, n):
+    """Create n-grams from the train data, n representing the number of words"""
     train_data, test_data = split_data(inputfile)
     n_grams = ngrams(train_data, n, pad_left=True, pad_right=True, left_pad_symbol="<s>", right_pad_symbol="<e>")
     print(list(n_grams))
@@ -56,7 +61,10 @@ def create_ngrams(inputfile, n):
 
 
 def ngram_vectors():
-     
+    """Take the one hot vectors representing the words, create n-grams from
+    those words or vectors (a list of lists). Make a pandas dataframe from that
+    array"""
+    pass
 
 # gendata.py -- Don't forget to put a reasonable amount code comments
 # in so that we better understand what you're doing when we grade!
