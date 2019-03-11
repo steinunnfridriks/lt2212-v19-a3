@@ -3,6 +3,60 @@ import glob
 import argparse
 import numpy as np
 import pandas as pd
+import re
+from nltk import word_tokenize
+from sklearn.utils import shuffle
+from nltk.util import ngrams
+
+
+def preprocessing(inputfile):
+    vocabulary = []
+    with open(inputfile, "r", encoding="utf8") as f:
+        file = f.read()
+        text = re.sub(r'/[^\s]+','',file)
+        text = word_tokenize(text)
+        for word in text:
+            if word not in vocabulary:
+                vocabulary.append(word)
+
+    sorted_vocab = sorted(vocabulary)
+    mapping = {word : number for number, word in enumerate(sorted_vocab)}
+
+    return mapping
+
+
+def create_vectors(inputfile):
+    vocabulary_dict = preprocessing(inputfile)
+    one_hot = {}
+    for word, number in vocabulary_dict.items():
+        vector = [0] * len(vocabulary_dict)
+        vector[number] = 1
+        one_hot[word] = vector
+    return one_hot
+
+
+def split_data(inputfile):
+    with open(inputfile, "r", encoding="utf8") as f:
+        file = f.read()
+        text = re.sub(r'/[^\s]+','',file)
+        text = word_tokenize(text)
+        train_data_percentage = 0.8
+        train_data, test_data = text[:int(train_data_percentage * len(text))], text[int(train_data_percentage * len(text)):]
+        train_data = shuffle(train_data)
+        test_data = shuffle(test_data)
+
+    return train_data, test_data
+
+
+def create_ngrams(inputfile, n):
+    train_data, test_data = split_data(inputfile)
+    n_grams = ngrams(train_data, n, pad_left=True, pad_right=True, left_pad_symbol="<s>", right_pad_symbol="<e>")
+    print(list(n_grams))
+    return list(n_grams)
+
+
+def ngram_vectors():
+     
 
 # gendata.py -- Don't forget to put a reasonable amount code comments
 # in so that we better understand what you're doing when we grade!
@@ -34,6 +88,11 @@ else:
 
 print("Constructing {}-gram model.".format(args.ngram))
 print("Writing table to {}.".format(args.outputfile))
-    
+
 # THERE ARE SOME CORNER CASES YOU HAVE TO DEAL WITH GIVEN THE INPUT
 # PARAMETERS BY ANALYZING THE POSSIBLE ERROR CONDITIONS.
+
+preprocessing(args.inputfile)
+split_data(args.inputfile)
+create_vectors(args.inputfile)
+create_ngrams(args.inputfile, args.ngram)
