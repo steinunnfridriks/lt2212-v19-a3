@@ -16,6 +16,8 @@ from line 400 to line 800       0.11111     1.10700     0.1         1.09592     
 from startline to line 600      0.11111     1.10499     0.11111     1.10499     0.11111     1.10524
 from startline to line 4000     0.14286     1.13298     0.14286     1.13298     0.14286     1.13325
 
+Please open this file in a text editor (or the edit mode on Github), Github seems to mess everything up. 
+
 Accuracy only shows the few times where the classifier happened to be right and in this case, the number
 of classes is so high, the accuracy value is virtually the same everywhere. The number of n-grams seems
 to be irrelevant however in this context, while accuracy does seem to go up with more amount of data.
